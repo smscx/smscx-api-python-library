@@ -296,7 +296,7 @@ To catch an exception, use Python’s `try`/`except` syntax. SMS Connexion provi
 
 ### 2. Analyze Error object
 
-The error object ( [**\Smscx\Client\Model\Error**](docs/Model/Error.md) ), which is present in all Exceptions, store information about failures. 
+The error object ( [**Error**](docs/model/Error.md) ), which is present in all Exceptions, store information about failures. 
 
 If you don’t want to rely on our existing Exceptions, you might need to analyze the details of the Error object.  
 
