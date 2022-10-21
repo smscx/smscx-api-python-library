@@ -212,7 +212,7 @@ send_sms_message_request = SendSmsMessageRequest(
         "+3069125917xx",
     ],
     _from="InfoText",
-    text="Redeem this voucher and you will get 30% discount off all Summer Fashion ",
+    text="Redeem this voucher and you will get 30% discount off all Summer Fashion {{optoutLink}}",
     idempotency_id="bf325375-e030-fccb-a009-17317c574773",
     transliteration=Transliteration(
         alphabet="NONE",
