@@ -1,5 +1,7 @@
 # smscx_client
 
+![SMS Connexion logo](https://sms.cx/assets/img/sms-connexion-logo-smscx-x2.png)
+
 The SMS Connexion API Python library provides convenient access to the SMS API of SMS.CX from applications written in Python language.
 
 Using this library you can send single or bulk SMS, create groups of contacts, import contacts, validate phone numbers, lookup phone numbers, send OTP SMS (2 factor authentication), create short links, and more.
