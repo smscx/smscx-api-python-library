@@ -1,6 +1,6 @@
 # smscx_client
 
-![SMS Connexion + Python logo](https://sms.cx/assets/img/sms-connexion-logo-smscx+python-x2.png)
+![SMS Connexion + Python logo](https://sms.cx/assets/img/sms-connexion-logo-smscx-x2.png)
 
 The SMS Connexion API Python library provides convenient access to the SMS API of SMS.CX from applications written in Python language.
 
