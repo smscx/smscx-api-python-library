@@ -8,6 +8,16 @@ Using this library you can send single or bulk SMS, create groups of contacts, i
   
 For more information, please visit [https://sms.cx](https://sms.cx)
 
+Content:
+
+ * [Installation](#installation)
+ * [Authentication](#authentication)
+ * [Usage](#usage)
+ * [Handling errors](#handling-errors)
+ * [Rate limit](#rate-limit)
+ * [Documentation](#documentation)
+ * [Available methods](#available-methods)
+
 ## Installation
 
 ### Requirements
