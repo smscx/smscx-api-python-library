@@ -20,8 +20,8 @@ from smscx_client.exceptions import ApiAttributeError
 
 
 def lazy_import():
-    from smscx_client.model.info_rent_number import InfoRentNumber
-    globals()['InfoRentNumber'] = InfoRentNumber
+    from smscx_client.model.info_rent_status import InfoRentStatus
+    globals()['InfoRentStatus'] = InfoRentStatus
 
 
 class GetRentStatusResponse(ModelNormal):
@@ -33,10 +33,7 @@ class GetRentStatusResponse(ModelNormal):
     validations = {
     }
 
-    @cached_property
-    def additional_properties_type():
-        lazy_import()
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 
@@ -49,7 +46,7 @@ class GetRentStatusResponse(ModelNormal):
         """
         lazy_import()
         return {
-            'info': (InfoRentNumber,),  # noqa: E501
+            'info': (InfoRentStatus,),  # noqa: E501
         }
 
     @cached_property
@@ -72,7 +69,7 @@ class GetRentStatusResponse(ModelNormal):
         """GetRentStatusResponse - a model
 
         Args:
-            info (InfoRentNumber):
+            info (InfoRentStatus):
 
 
         """
@@ -131,7 +128,7 @@ class GetRentStatusResponse(ModelNormal):
         """GetRentStatusResponse - a model
 
         Args:
-            info (InfoRentNumber):
+            info (InfoRentStatus):
 
 
         """

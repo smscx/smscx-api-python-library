@@ -20,29 +20,26 @@ from smscx_client.exceptions import ApiAttributeError
 
 
 def lazy_import():
-    from smscx_client.model.rental_cost import RentalCost
-    globals()['RentalCost'] = RentalCost
+    from smscx_client.model.rent_cost import RentCost
+    globals()['RentCost'] = RentCost
 
 
 class DataAvailableNumbersRent(ModelNormal):
 
 
     allowed_values = {
-        ('sms',): {
-            'INBOUND': "inbound",
-            'OUTBOUND': "outbound",
+        ('number_type',): {
+            'MOBILE': "mobile",
+            'LANDLINE': "landline",
         },
         ('min_rent',): {
-            'None': None,
-            '1': "1",
-            '7': "7",
-            '30': "30",
+            '1': 1,
+            '7': 7,
+            '30': 30,
         },
-        ('max_rent',): {
-            'None': None,
-            '1': "1",
-            '7': "7",
-            '30': "30",
+        ('setup_time',): {
+            'INSTANT': "instant",
+            'DELAYED': "delayed",
         },
     }
 
@@ -60,10 +57,7 @@ class DataAvailableNumbersRent(ModelNormal):
         },
     }
 
-    @cached_property
-    def additional_properties_type():
-        lazy_import()
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 
@@ -80,13 +74,17 @@ class DataAvailableNumbersRent(ModelNormal):
             'phone_number': (str, none_type,),  # noqa: E501
             'country_iso': (str,),  # noqa: E501
             'network_operator': (str,),  # noqa: E501
-            'sms': ([str],),  # noqa: E501
-            'voice': ([str],),  # noqa: E501
-            'min_rent': (str, none_type,),  # noqa: E501
-            'max_rent': (str, none_type,),  # noqa: E501
-            'setup_cost': (float,),  # noqa: E501
-            'rental_cost': (RentalCost,),  # noqa: E501
+            'features': (int,),  # noqa: E501
+            'number_type': (str,),  # noqa: E501
             'inbound_sms_cost': (float,),  # noqa: E501
+            'outbound_sms_cost': (float, none_type,),  # noqa: E501
+            'setup_cost': (float,),  # noqa: E501
+            'rent_cost': ([RentCost],),  # noqa: E501
+            'min_rent': (int,),  # noqa: E501
+            'setup_time': (str,),  # noqa: E501
+            'registration': (bool,),  # noqa: E501
+            'datetime': (datetime,),  # noqa: E501
+            'inbound_sms_sender': (bool,),  # noqa: E501
         }
 
     @cached_property
@@ -99,13 +97,17 @@ class DataAvailableNumbersRent(ModelNormal):
         'phone_number': 'phoneNumber',  # noqa: E501
         'country_iso': 'countryIso',  # noqa: E501
         'network_operator': 'networkOperator',  # noqa: E501
-        'sms': 'sms',  # noqa: E501
-        'voice': 'voice',  # noqa: E501
-        'min_rent': 'minRent',  # noqa: E501
-        'max_rent': 'maxRent',  # noqa: E501
-        'setup_cost': 'setupCost',  # noqa: E501
-        'rental_cost': 'rentalCost',  # noqa: E501
+        'features': 'features',  # noqa: E501
+        'number_type': 'numberType',  # noqa: E501
         'inbound_sms_cost': 'inboundSmsCost',  # noqa: E501
+        'outbound_sms_cost': 'outboundSmsCost',  # noqa: E501
+        'setup_cost': 'setupCost',  # noqa: E501
+        'rent_cost': 'rentCost',  # noqa: E501
+        'min_rent': 'minRent',  # noqa: E501
+        'setup_time': 'setupTime',  # noqa: E501
+        'registration': 'registration',  # noqa: E501
+        'datetime': 'datetime',  # noqa: E501
+        'inbound_sms_sender': 'inboundSmsSender',  # noqa: E501
     }
 
     read_only_vars = {
@@ -115,23 +117,25 @@ class DataAvailableNumbersRent(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_api_data(cls, number_id, phone_number, country_iso, network_operator, sms, voice, min_rent, max_rent, setup_cost, rental_cost, inbound_sms_cost, *args, **kwargs):  # noqa: E501
+    def _from_api_data(cls, number_id, phone_number, country_iso, network_operator, features, number_type, inbound_sms_cost, outbound_sms_cost, setup_cost, rent_cost, min_rent, setup_time, registration, datetime, *args, **kwargs):  # noqa: E501
         """DataAvailableNumbersRent - a model
 
         Args:
             number_id (str): Unique identifier of phone number
-            phone_number (str, none_type): Phone number in international E.164 format. In some cases this value might be null as the phone number will be selected random from a pool of numbers
+            phone_number (str, none_type): Phone number in international E.164 format. In some cases this value might be `null` as the phone number will be selected random from a pool of numbers
             country_iso (str): Two-letter country ISO of the phone number
             network_operator (str): Network operator of the phone number
-            sms ([str]): SMS features that the phone number supports (inbound or outbound SMS)
-            voice ([str]): Voice features that the phone number supports
-            min_rent (str, none_type): Minimum period that this phone number must be rented (in days)
-            max_rent (str, none_type): Maximum period that this phone number can be rented (in days)
+            features (int): Sum of features of the phone number, in numerical value. The following are the corresponding values for each feature:  - `1` for receiving SMS (inbound SMS)  - `2` for sending SMS (outbound SMS)  - `4` for voice.      <br> <br>  A phone number with feature `1` can only receive SMS, with feature `2` can only send SMS, and with feature value `3` (1 + 2) cand send and receive SMS
+            number_type (str): Type of phone number
+            inbound_sms_cost (float): Cost for receiving a SMS on this phone number (most of the time receiving is free, meaning this has value 0)
+            outbound_sms_cost (float, none_type): Cost for sending a SMS from this phone number. If the number doesn't have outbound SMS as a feature, this parameter will be `null`
             setup_cost (float): One time setup fee for the rented phone number (if applicable)
-            rental_cost (RentalCost):
-            inbound_sms_cost (float): Cost for receiving a SMS on this phone number (most of the time receiving is free, meaning this is has value 0)
-
-
+            rent_cost ([RentCost]): Array of objects with cost for every period (in days). If the phone number has a minimum rent period of 30 days, this array will contain only one object with cost for 30 days. If minimum rent is 1 day, then this array will contain 3 objects with cost for 1, 7, 30 days
+            min_rent (int): Minimum period that this phone number must be rented (in days)
+            setup_time (str): The time to setup the number. instant - the number is available immediately, delayed - the number will be available after a period of time (between 10 minutes and few days)
+            registration (bool): Indicates if the phone number requires registration
+            datetime (datetime):
+            inbound_sms_sender (bool): Indicates if the phone number can receive SMS from alphanumeric sender ID. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)
@@ -167,13 +171,16 @@ class DataAvailableNumbersRent(ModelNormal):
         self.phone_number = phone_number
         self.country_iso = country_iso
         self.network_operator = network_operator
-        self.sms = sms
-        self.voice = voice
-        self.min_rent = min_rent
-        self.max_rent = max_rent
-        self.setup_cost = setup_cost
-        self.rental_cost = rental_cost
+        self.features = features
+        self.number_type = number_type
         self.inbound_sms_cost = inbound_sms_cost
+        self.outbound_sms_cost = outbound_sms_cost
+        self.setup_cost = setup_cost
+        self.rent_cost = rent_cost
+        self.min_rent = min_rent
+        self.setup_time = setup_time
+        self.registration = registration
+        self.datetime = datetime
         for var_name, var_value in kwargs.items():
             if var_name not in self.attribute_map and \
                         self._configuration is not None and \
@@ -194,23 +201,25 @@ class DataAvailableNumbersRent(ModelNormal):
     ])
 
     @convert_js_args_to_python_args
-    def __init__(self, number_id, phone_number, country_iso, network_operator, sms, voice, min_rent, max_rent, setup_cost, rental_cost, inbound_sms_cost, *args, **kwargs):  # noqa: E501
+    def __init__(self, number_id, phone_number, country_iso, network_operator, features, number_type, inbound_sms_cost, outbound_sms_cost, setup_cost, rent_cost, min_rent, setup_time, registration, datetime, *args, **kwargs):  # noqa: E501
         """DataAvailableNumbersRent - a model
 
         Args:
             number_id (str): Unique identifier of phone number
-            phone_number (str, none_type): Phone number in international E.164 format. In some cases this value might be null as the phone number will be selected random from a pool of numbers
+            phone_number (str, none_type): Phone number in international E.164 format. In some cases this value might be `null` as the phone number will be selected random from a pool of numbers
             country_iso (str): Two-letter country ISO of the phone number
             network_operator (str): Network operator of the phone number
-            sms ([str]): SMS features that the phone number supports (inbound or outbound SMS)
-            voice ([str]): Voice features that the phone number supports
-            min_rent (str, none_type): Minimum period that this phone number must be rented (in days)
-            max_rent (str, none_type): Maximum period that this phone number can be rented (in days)
+            features (int): Sum of features of the phone number, in numerical value. The following are the corresponding values for each feature:  - `1` for receiving SMS (inbound SMS)  - `2` for sending SMS (outbound SMS)  - `4` for voice.      <br> <br>  A phone number with feature `1` can only receive SMS, with feature `2` can only send SMS, and with feature value `3` (1 + 2) cand send and receive SMS
+            number_type (str): Type of phone number
+            inbound_sms_cost (float): Cost for receiving a SMS on this phone number (most of the time receiving is free, meaning this has value 0)
+            outbound_sms_cost (float, none_type): Cost for sending a SMS from this phone number. If the number doesn't have outbound SMS as a feature, this parameter will be `null`
             setup_cost (float): One time setup fee for the rented phone number (if applicable)
-            rental_cost (RentalCost):
-            inbound_sms_cost (float): Cost for receiving a SMS on this phone number (most of the time receiving is free, meaning this is has value 0)
-
-
+            rent_cost ([RentCost]): Array of objects with cost for every period (in days). If the phone number has a minimum rent period of 30 days, this array will contain only one object with cost for 30 days. If minimum rent is 1 day, then this array will contain 3 objects with cost for 1, 7, 30 days
+            min_rent (int): Minimum period that this phone number must be rented (in days)
+            setup_time (str): The time to setup the number. instant - the number is available immediately, delayed - the number will be available after a period of time (between 10 minutes and few days)
+            registration (bool): Indicates if the phone number requires registration
+            datetime (datetime):
+            inbound_sms_sender (bool): Indicates if the phone number can receive SMS from alphanumeric sender ID. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)
@@ -244,13 +253,16 @@ class DataAvailableNumbersRent(ModelNormal):
         self.phone_number = phone_number
         self.country_iso = country_iso
         self.network_operator = network_operator
-        self.sms = sms
-        self.voice = voice
-        self.min_rent = min_rent
-        self.max_rent = max_rent
-        self.setup_cost = setup_cost
-        self.rental_cost = rental_cost
+        self.features = features
+        self.number_type = number_type
         self.inbound_sms_cost = inbound_sms_cost
+        self.outbound_sms_cost = outbound_sms_cost
+        self.setup_cost = setup_cost
+        self.rent_cost = rent_cost
+        self.min_rent = min_rent
+        self.setup_time = setup_time
+        self.registration = registration
+        self.datetime = datetime
         for var_name, var_value in kwargs.items():
             if var_name not in self.attribute_map and \
                         self._configuration is not None and \

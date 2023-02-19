@@ -34,15 +34,20 @@ class InfoCancelRent(ModelNormal):
                 'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',  # noqa: E501
             },
         },
+        ('number_id',): {
+            'max_length': 36,
+            'min_length': 36,
+            'regex': {
+                'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',  # noqa: E501
+            },
+        },
         ('country_iso',): {
             'max_length': 2,
             'min_length': 2,
         },
     }
 
-    @cached_property
-    def additional_properties_type():
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 
@@ -55,6 +60,7 @@ class InfoCancelRent(ModelNormal):
         """
         return {
             'rent_id': (str,),  # noqa: E501
+            'number_id': (str,),  # noqa: E501
             'phone_number': (str,),  # noqa: E501
             'country_iso': (str,),  # noqa: E501
             'credit_returned': (float,),  # noqa: E501
@@ -67,6 +73,7 @@ class InfoCancelRent(ModelNormal):
 
     attribute_map = {
         'rent_id': 'rentId',  # noqa: E501
+        'number_id': 'numberId',  # noqa: E501
         'phone_number': 'phoneNumber',  # noqa: E501
         'country_iso': 'countryIso',  # noqa: E501
         'credit_returned': 'creditReturned',  # noqa: E501
@@ -79,14 +86,15 @@ class InfoCancelRent(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_api_data(cls, rent_id, phone_number, country_iso, credit_returned, *args, **kwargs):  # noqa: E501
+    def _from_api_data(cls, rent_id, number_id, phone_number, country_iso, credit_returned, *args, **kwargs):  # noqa: E501
         """InfoCancelRent - a model
 
         Args:
             rent_id (str): Unique identifier of the active rent
+            number_id (str): Unique identifier of phone number
             phone_number (str): Rented phone number in international E.164 format
             country_iso (str): Two-letter country code in ISO-3166 alpha 2 standard. Eg. `DE`, `FR`, `IT`
-            credit_returned (float): Credit returned to your account balance
+            credit_returned (float): Credit returned to your account balance. Please note that the one-time setup cost (provision cost) is not returned, only the rent cost of the number
 
 
         """
@@ -121,6 +129,7 @@ class InfoCancelRent(ModelNormal):
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
         self.rent_id = rent_id
+        self.number_id = number_id
         self.phone_number = phone_number
         self.country_iso = country_iso
         self.credit_returned = credit_returned
@@ -144,14 +153,15 @@ class InfoCancelRent(ModelNormal):
     ])
 
     @convert_js_args_to_python_args
-    def __init__(self, rent_id, phone_number, country_iso, credit_returned, *args, **kwargs):  # noqa: E501
+    def __init__(self, rent_id, number_id, phone_number, country_iso, credit_returned, *args, **kwargs):  # noqa: E501
         """InfoCancelRent - a model
 
         Args:
             rent_id (str): Unique identifier of the active rent
+            number_id (str): Unique identifier of phone number
             phone_number (str): Rented phone number in international E.164 format
             country_iso (str): Two-letter country code in ISO-3166 alpha 2 standard. Eg. `DE`, `FR`, `IT`
-            credit_returned (float): Credit returned to your account balance
+            credit_returned (float): Credit returned to your account balance. Please note that the one-time setup cost (provision cost) is not returned, only the rent cost of the number
 
 
         """
@@ -184,6 +194,7 @@ class InfoCancelRent(ModelNormal):
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
         self.rent_id = rent_id
+        self.number_id = number_id
         self.phone_number = phone_number
         self.country_iso = country_iso
         self.credit_returned = credit_returned

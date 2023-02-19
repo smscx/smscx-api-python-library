@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **group_id** | **str, none_type** | Identifier of the group the contact was in | [optional] 
 **group_name** | **str** | Name of the group the contact was in | [optional] 
 **campaign_name** | **str, none_type** | Name of the campaign from which the contact has unsubscribed | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

@@ -4,8 +4,18 @@
 
 The SMS Connexion API Python library provides convenient access to the SMS API of SMS.CX from applications written in Python language.
 
-Using this library you can send single or bulk SMS, create groups of contacts, import contacts, validate phone numbers, lookup phone numbers, send OTP SMS (2 factor authentication), create short links, and more.
-  
+Using this library you can:
+- send SMS (transactional, promotional) - single or bulk SMS
+- receive SMS
+- rent phone numbers
+- validate phone numbers
+- lookup phone numbers (HLR)
+- send OTP SMS (2FA)
+- create groups of contacts
+- import contacts
+- create short links
+- and more
+
 For more information, please visit [https://sms.cx](https://sms.cx)
 
 Content:
@@ -437,6 +447,7 @@ Method | Description
 Method | Description
 | ------------- | -------------
 | [**add_contacts_to_group()**](docs/api/GroupsApi.md#add_contacts_to_group) | Add contacts to group
+| [**add_contacts_to_group_with_fields()**](docs/api/GroupsApi.md#add_contacts_to_group_with_fields) | Add contacts to group with fields (first name, last name, email etc.)
 | [**create_group()**](docs/api/GroupsApi.md#create_group) | Create new group
 | [**delete_contact_from_group()**](docs/api/GroupsApi.md#delete_contact_from_group) | Delete contact from group
 | [**delete_group()**](docs/api/GroupsApi.md#delete_group) | Delete group
@@ -467,9 +478,12 @@ Method | Description
 Method | Description
 | ------------- | -------------
 | [**get_bulk_lookup_status()**](docs/api/NumbersApi.md#get_bulk_lookup_status) | Get Bulk Lookup result
+| [**get_bulk_lookup_campaigns()**](docs//api/NumbersApi.md#get_bulk_lookup_campaigns) | Get list of bulk lookup campaigns
 | [**get_single_lookup_status()**](docs/api/NumbersApi.md#get_single_lookup_status) | Get Single Lookup result
 | [**lookup_number()**](docs/api/NumbersApi.md#lookup_number) 💰 | Lookup number
 | [**lookup_numbers()**](docs/api/NumbersApi.md#lookup_numbers) 💰 | Lookup numbers in bulk
+| [**export_number_lookup_report_to_csv()**](docs//api/NumbersApi.md#export_number_lookup_report_to_csv) | Export number lookup campaign to CSV
+| [**export_number_lookup_report_to_xlsx()**](docs//api/NumbersApi.md#export_number_lookup_report_to_xlsx) | Export number lookup campaign to XLSX
 | [**validate_number()**](docs/api/NumbersApi.md#validate_number) | Validate number
 | [**validate_numbers()**](docs/api/NumbersApi.md#validate_numbers) | Validate numbers in bulk
 | [**get_available_numbers()**](docs/api/NumbersApi.md#get_available_numbers) | Get available numbers for rent
@@ -479,6 +493,7 @@ Method | Description
 | [**get_rent_status()**](docs/api/NumbersApi.md#get_rent_status) | Get status of rent
 | [**get_rented_numbers()**](docs/api/NumbersApi.md#get_rented_numbers) | Get list of your rented numbers
 | [**get_inbound_sms()**](docs/api/NumbersApi.md#get_inbound_sms) | Get inbound SMS from rented number
+| [**edit_rent_settings()**](docs//api/NumbersApi.md#edit_rent_settings) | Edit settings for active rent
 
 
 
@@ -629,7 +644,7 @@ dev@sms.cx
 
 ## About this package
 
-- Client library version: `0.1.11`
+- Client library version: `0.1.13`
 - API version: `1.0.2`
 
 ## License

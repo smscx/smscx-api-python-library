@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **dlr_callback_url** | **str, none_type** | Callback URL for receiving the delivery report | 
 **phone_numbers_by_country** | [**PhoneNumbersByCountry**](PhoneNumbersByCountry.md) |  | 
 **scheduled** | **bool** | Confirmation that the message/campaign was scheduled at a later date | 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

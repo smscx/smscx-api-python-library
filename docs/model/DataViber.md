@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 **parts** | **int** | Message parts. For Viber/Whatsapp/Multichannel this variable is always with value 1 | 
 **track_data** | **str** | Client own UUID (v1-v5) provided to track messages | [optional] 
 **scheduled_at** | **datetime** | Date and time when the message was scheduled. If the date and time of sending or scheduling is detected to be in the quiet hours interval, the API will schedule the sending of the Viber message at the end of the quiet hours. Eg. If quiet hours is defined between 21:30 and 09:30 and the message sending is at 21:55, then the API will schedule the message the next day at 09:31 | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

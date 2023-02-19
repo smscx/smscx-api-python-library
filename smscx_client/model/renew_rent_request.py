@@ -34,9 +34,7 @@ class RenewRentRequest(ModelNormal):
     validations = {
     }
 
-    @cached_property
-    def additional_properties_type():
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 
@@ -76,8 +74,8 @@ class RenewRentRequest(ModelNormal):
 
 
             rent_period (int): Rental period of the phone number (in days). This parameter is optional. If not present, the phone number rent will renew with the current rent period.. [optional]  # noqa: E501
-            auto_renew (bool): Auto renew the rental of the phone number at the end of the rental period. [optional] if omitted the server will use the default value of False  # noqa: E501
-            callback_url (str, none_type): Callback URL (or webhook) to get the received SMS on the rented phone number. [optional]  # noqa: E501
+            auto_renew (bool): Auto renew the rent of the phone number at the end of the rental period. [optional] if omitted the server will use the default value of False  # noqa: E501
+            callback_url (str, none_type): Callback URL (or webhook) to get the SMS that is received on the rented phone number (inbound SMS). [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)
@@ -134,8 +132,8 @@ class RenewRentRequest(ModelNormal):
 
 
             rent_period (int): Rental period of the phone number (in days). This parameter is optional. If not present, the phone number rent will renew with the current rent period.. [optional]  # noqa: E501
-            auto_renew (bool): Auto renew the rental of the phone number at the end of the rental period. [optional] if omitted the server will use the default value of False  # noqa: E501
-            callback_url (str, none_type): Callback URL (or webhook) to get the received SMS on the rented phone number. [optional]  # noqa: E501
+            auto_renew (bool): Auto renew the rent of the phone number at the end of the rental period. [optional] if omitted the server will use the default value of False  # noqa: E501
+            callback_url (str, none_type): Callback URL (or webhook) to get the SMS that is received on the rented phone number (inbound SMS). [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)

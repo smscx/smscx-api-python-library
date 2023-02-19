@@ -3,6 +3,7 @@
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**add_contacts_to_group()**](GroupsApi.md#add_contacts_to_group) | **POST** /groups/{groupId} | Add contacts to group
+[**add_contacts_to_group_with_fields()**](GroupsApi.md#add_contacts_to_group_with_fields) | **POST** /groups/{groupId} | Add contacts to group with fields (first name, last name, email etc.)
 [**create_group()**](GroupsApi.md#create_group) | **POST** /groups | Create new group
 [**delete_contact_from_group()**](GroupsApi.md#delete_contact_from_group) | **DELETE** /groups/{groupId}/{phoneNumberId} | Delete contact from group
 [**delete_group()**](GroupsApi.md#delete_group) | **DELETE** /groups/{groupId} | Delete group
@@ -74,6 +75,119 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **group_id** | **int**| Identifier of a group of contacts | required
  **add_contacts_to_group_request** | [**AddContactsToGroupRequest**](../model/AddContactsToGroupRequest.md)|  | required
+
+### Return type
+
+[**AddContactsToGroupResponse**](../model/AddContactsToGroupResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../../README.md#ApiKeyAuth), [BearerAuth](../../README.md#BearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  * X-Request-Id -  <br>  * X-Response-Time -  <br>  * X-Rate-Limit-Limit -  <br>  * X-Rate-Limit-Remaining -  <br>  |
+**400** | Bad Request |  -  |
+**401** | Unauthorized |  -  |
+**403** | Forbidden |  -  |
+**404** | Not Found |  -  |
+**405** | Method Not Allowed |  -  |
+**429** | Too Many Requests |  * X-Rate-Limit-Limit -  <br>  * X-Rate-Limit-Remaining -  <br>  * X-Rate-Limit-Reset -  <br>  |
+**500** | Internal Server Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../../README.md#available-methods) [[Back to Model list]](../../README.md#models) [[Back to README]](../../README.md)
+
+
+# **add_contacts_to_group_with_fields()**
+> AddContactsToGroupResponse add_contacts_to_group_with_fields(group_id, add_contacts_to_group_request)
+
+Add contacts to group
+
+Add contacts to a group if a valid identifier was provided.    
+### Errors for POST `/groups/{groupId}`  
+| HTTP code  | Error code  | Type  | Description  |  
+|:------------:|:------------:|:------------:| ------------ |  
+|  400 | 1203  |  invalid_param  | The parameter `phoneNumbers` is empty or not set |  
+|  400 | 1208  |  invalid_param  |  The parameter `phoneNumbers` must be an array of phone numbers  |    
+|  400 | 1207  |  invalid_param  | The phone number provided is not valid |  
+|  400 | 1210  |  invalid_param  | The phone numbers provided are invalid |  
+|  404 | 1200  |  not_found  | Group ID not found |
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+* Bearer Authentication (BearerAuth):
+
+```python
+import time
+import smscx_client
+from smscx_client.api import groups_api
+from smscx_client.model.add_contacts_to_group_with_fields_request import AddContactsToGroupWithFieldsRequest
+from smscx_client.model.group_add import GroupAdd
+from pprint import pprint
+
+configuration = smscx_client.Configuration(
+   # Use authentication via API Key
+   api_key = "YOUR_API_KEY",
+
+   # Uncomment to use authentication via Access Token
+   # access_token = "YOUR_ACCESS_TOKEN",
+)
+
+# Create an instance of the API class
+api_instance = groups_api.GroupsApi(
+    smscx_client.ApiClient(configuration)
+)    
+group_id = 1
+add_contacts_to_group_request = AddContactsToGroupWithFieldsRequest(
+    phone_numbers=[GroupAdd(
+            phone_number="+336125151xx",
+            first_name="John",
+            last_name="Doe",
+            email="john@doe.com",
+            field1="field1_example",
+            field2="field2_example",
+            field3="field3_example",
+            field4="field4_example",
+            field5="field5_example",
+        ),GroupAdd(
+            phone_number="+336128298xx",
+            first_name="Alain",
+            last_name="Maurice",
+            email="alain@maurice.com",
+            field1="field1_example",
+            field2="field2_example",
+            field3="field3_example",
+            field4="field4_example",
+            field5="field5_example",
+        ),
+    ],
+    allow_invalid=True
+) 
+
+try:
+    # Add contacts to group
+    api_response = api_instance.add_contacts_to_group_with_fields(group_id, add_contacts_to_group_request)
+    pprint(api_response)
+except smscx_client.ApiException as e:
+    print("Exception when calling GroupsApi->add_contacts_to_group_with_fields: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **group_id** | **int**| Identifier of a group of contacts | required
+ **add_contacts_to_group_request** | [**AddContactsToGroupWithFieldsRequest**](../model/AddContactsToGroupWithFieldsRequest.md)|  | required
 
 ### Return type
 

@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 **short_response** | **bool** | If set to &#x60;true&#x60;, it will return the full &#x60;info&#x60; object and empty &#x60;data&#x60; object. For situations when you don&#39;t need the information in the &#x60;data&#x60; object and want to save bandwith | [optional]  if omitted the server will use the default value of False
 **no_text_details** | **bool** | The response will not have the parameters &#x60;data.text&#x60; and &#x60;data.textAnalysis&#x60;. For situations when you send to large lists of phone numbers and don&#39;t need all response parameters (save bandwith) | [optional]  if omitted the server will use the default value of False
 **show_timezone** | **bool** | Shows the parameter &#x60;timezone&#x60; in the response, for each phone number | [optional]  if omitted the server will use the default value of False
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

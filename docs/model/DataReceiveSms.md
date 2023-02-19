@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **text** | **str** | The text of the received SMS | 
 **cost** | **float** | The cost of receiving the SMS. It is usually free to receive SMS, but in some countries some charges may apply  | 
 **received_at** | **datetime** | Date and time of receiving the text message | 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

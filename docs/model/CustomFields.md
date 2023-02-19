@@ -6,7 +6,7 @@ An object with **key-value** pairs, where the key is the name of the custom fiel
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **custom_field_name** | **{str: (str,)}** | The name of the custom field | 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

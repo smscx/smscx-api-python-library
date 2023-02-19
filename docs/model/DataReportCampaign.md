@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 **channel** | **str** | Channel that sent the message | 
 **text_analysis** | [**TextAnalysis**](TextAnalysis.md) |  | 
 **scheduled_at** | **datetime, none_type** | Date and time when the message was scheduled | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

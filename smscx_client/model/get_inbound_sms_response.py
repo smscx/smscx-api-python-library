@@ -37,10 +37,7 @@ class GetInboundSMSResponse(ModelNormal):
     validations = {
     }
 
-    @cached_property
-    def additional_properties_type():
-        lazy_import()
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 

@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 **otp_callback_url** | **str, none_type** | The webhook where request will be made with status updates for the OTP validation | 
 **date_created** | **datetime** | Datetime of the OTP request | 
 **date_expires** | **datetime** | Datetime of the OTP request expiration. After this date and time the pin will no longer be valid | 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

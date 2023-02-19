@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **field4** | **str** | Data field for extra information of the contact. Use placeholder **{{field4}}** in text message for data replacement | [optional] 
 **field5** | **str** | Data field for extra information of the contact. Use placeholder **{{field5}}** in text message for data replacement | [optional] 
 **custom_fields** | [**CustomFieldsObj**](CustomFieldsObj.md) |  | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

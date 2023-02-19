@@ -21,9 +21,11 @@ from smscx_client.exceptions import ApiAttributeError
 
 def lazy_import():
     from smscx_client.model.data_number_lookup import DataNumberLookup
-    from smscx_client.model.info_numbers_lookup import InfoNumbersLookup
+    from smscx_client.model.info_lookup_details import InfoLookupDetails
+    from smscx_client.model.paging import Paging
     globals()['DataNumberLookup'] = DataNumberLookup
-    globals()['InfoNumbersLookup'] = InfoNumbersLookup
+    globals()['InfoLookupDetails'] = InfoLookupDetails
+    globals()['Paging'] = Paging
 
 
 class NumbersBulkLookupResult(ModelNormal):
@@ -35,10 +37,7 @@ class NumbersBulkLookupResult(ModelNormal):
     validations = {
     }
 
-    @cached_property
-    def additional_properties_type():
-        lazy_import()
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 
@@ -51,8 +50,9 @@ class NumbersBulkLookupResult(ModelNormal):
         """
         lazy_import()
         return {
-            'info': (InfoNumbersLookup,),  # noqa: E501
+            'info': (InfoLookupDetails,),  # noqa: E501
             'data': ([DataNumberLookup],),  # noqa: E501
+            'paging': (Paging,),  # noqa: E501
         }
 
     @cached_property
@@ -63,6 +63,7 @@ class NumbersBulkLookupResult(ModelNormal):
     attribute_map = {
         'info': 'info',  # noqa: E501
         'data': 'data',  # noqa: E501
+        'paging': 'paging',  # noqa: E501
     }
 
     read_only_vars = {
@@ -72,12 +73,13 @@ class NumbersBulkLookupResult(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_api_data(cls, info, data, *args, **kwargs):  # noqa: E501
+    def _from_api_data(cls, info, data, paging, *args, **kwargs):  # noqa: E501
         """NumbersBulkLookupResult - a model
 
         Args:
-            info (InfoNumbersLookup):
+            info (InfoLookupDetails):
             data ([DataNumberLookup]): 
+            paging (Paging):
 
 
         """
@@ -113,6 +115,7 @@ class NumbersBulkLookupResult(ModelNormal):
 
         self.info = info
         self.data = data
+        self.paging = paging
         for var_name, var_value in kwargs.items():
             if var_name not in self.attribute_map and \
                         self._configuration is not None and \
@@ -133,12 +136,13 @@ class NumbersBulkLookupResult(ModelNormal):
     ])
 
     @convert_js_args_to_python_args
-    def __init__(self, info, data, *args, **kwargs):  # noqa: E501
+    def __init__(self, info, data, paging, *args, **kwargs):  # noqa: E501
         """NumbersBulkLookupResult - a model
 
         Args:
-            info (InfoNumbersLookup):
+            info (InfoLookupDetails):
             data ([DataNumberLookup]): 
+            paging (Paging):
 
 
         """
@@ -172,6 +176,7 @@ class NumbersBulkLookupResult(ModelNormal):
 
         self.info = info
         self.data = data
+        self.paging = paging
         for var_name, var_value in kwargs.items():
             if var_name not in self.attribute_map and \
                         self._configuration is not None and \

@@ -20,9 +20,9 @@ api_instance = numbers_api.NumbersApi(
 # Identifier of the rental operation
 rent_id = "471ddea7-930c-49e8-8e99-2683834dd92e" 
 renew_rent_request = RenewRentRequest(
-        rent_period=1,
+        rent_period=30,
         auto_renew=False,
-        callback_url="callback_url_example",
+        callback_url="https://webhook/receive-sms-endpoint",
     ) # RenewRentRequest | 
 
 try:

@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 **transliteration_analysis** | [**TransliterationAnalysis**](TransliterationAnalysis.md) |  | [optional] 
 **total_in_quiet_hours** | **int** | Total phone numbers that were detected to be inside the interval of quiet hours | [optional] 
 **invalid** | **[str]** | An array with numbers that were detected to be invalid | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

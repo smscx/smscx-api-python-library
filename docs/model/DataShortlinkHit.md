@@ -25,7 +25,7 @@ Name | Type | Description | Notes
 **phone_number** | **str** | Phone number of the visitor that made the hit to the shortlink (works if link tracking option is used when sending a message). If short link tracking was enabled, this parameter will not be null.  | [optional] 
 **campaign_id** | **str, none_type** | Identifier of the campaign from which the contact has made the visit. If short link tracking was enabled, this parameter will not be null. | [optional] 
 **group_id** | **str, none_type** | Identifier of the group the contact is in. If short link tracking was enabled, this parameter will not be null. | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

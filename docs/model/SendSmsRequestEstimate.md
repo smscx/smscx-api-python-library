@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 **no_text_details** | **bool** | The response will not have the parameters &#x60;data.text&#x60; and &#x60;data.textAnalysis&#x60;. For situations when you send to large lists of phone numbers and don&#39;t need all response parameters (save bandwith) | [optional]  if omitted the server will use the default value of False
 **show_timezone** | **bool** | Shows the parameter &#x60;timezone&#x60; in the response, for each phone number | [optional]  if omitted the server will use the default value of False
 **transliteration** | [**Transliteration**](Transliteration.md) |  | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

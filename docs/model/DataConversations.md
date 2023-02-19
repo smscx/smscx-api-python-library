@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **unread_messages** | **int** | New messages in this conversation that were not read | 
 **last_reply** | **str** | Preview of the last message in the converstion | 
 **last_update** | **str** | Date and time of last reply from the contact to this conversation | 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

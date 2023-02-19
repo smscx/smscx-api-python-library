@@ -231,6 +231,7 @@ import time
 import smscx_client
 from smscx_client.api import sms_api
 from smscx_client.model.send_sms_request_estimate import SendSmsRequestEstimate
+from smscx_client.model.transliteration import Transliteration
 from pprint import pprint
 
 configuration = smscx_client.Configuration(
@@ -352,6 +353,7 @@ import time
 import smscx_client
 from smscx_client.api import sms_api
 from smscx_client.model.send_sms_campaign_request_estimate import SendSmsCampaignRequestEstimate
+from smscx_client.model.transliteration import Transliteration
 from pprint import pprint
 
 configuration = smscx_client.Configuration(
@@ -477,6 +479,7 @@ import time
 import smscx_client
 from smscx_client.api import sms_api
 from smscx_client.model.send_sms_message_request import SendSmsMessageRequest
+from smscx_client.model.transliteration import Transliteration
 from pprint import pprint
 
 configuration = smscx_client.Configuration(
@@ -617,6 +620,7 @@ from smscx_client.model.model400_invalid_param import Model400InvalidParam
 from smscx_client.model.model500_server_error import Model500ServerError
 from smscx_client.model.model401_unauthorized import Model401Unauthorized
 from smscx_client.model.send_sms_campaign_response import SendSmsCampaignResponse
+from smscx_client.model.transliteration import Transliteration
 from pprint import pprint
 
 configuration = smscx_client.Configuration(

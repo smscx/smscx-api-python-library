@@ -4,9 +4,9 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**info** | [**InfoNumbersLookup**](InfoNumbersLookup.md) |  | 
+**info** | [**InfoLookupDetails**](InfoLookupDetails.md) |  | 
 **data** | [**[DataNumberLookup]**](DataNumberLookup.md) |  | 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+**paging** | [**Paging**](Paging.md) |  | 
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

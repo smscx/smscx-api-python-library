@@ -18,9 +18,11 @@ api_instance = numbers_api.NumbersApi(
 )    
 rent_number_request = RentNumberRequest(
         number_id="bf325375-e030-fccb-a009-17317c574773",
-        rent_period=1,
+        rent_period=30,
         auto_renew=False,
         callback_url="https://webhook/receive-inbound-sms/",
+        # registration_id="bf325375-e030-fccb-a009-17317c574773",
+
     )
 
 try:

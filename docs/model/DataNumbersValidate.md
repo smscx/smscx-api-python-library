@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **country_iso** | **str** | Two-letter country ISO of the phone number | [optional] 
 **network_operator** | **str** | Network operator of the phone number | [optional] 
 **timezone** | **str** | Timezone of the phone number based on the country iso | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

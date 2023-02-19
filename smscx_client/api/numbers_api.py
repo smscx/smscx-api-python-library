@@ -11,14 +11,19 @@ from smscx_client.model_utils import (  # noqa: F401
     none_type,
     validate_and_convert_types
 )
+from smscx_client.model.bulk_lookup_campaigns_response import BulkLookupCampaignsResponse
 from smscx_client.model.cancel_rent_response import CancelRentResponse
 from smscx_client.model.data_number_lookup import DataNumberLookup
+from smscx_client.model.edit_rent_request import EditRentRequest
+from smscx_client.model.edit_rent_response import EditRentResponse
 from smscx_client.model.get_inbound_sms_response import GetInboundSMSResponse
 from smscx_client.model.get_rent_status_response import GetRentStatusResponse
 from smscx_client.model.model400_invalid_param import Model400InvalidParam
 from smscx_client.model.model401_unauthorized import Model401Unauthorized
 from smscx_client.model.model403_insufficient_scope import Model403InsufficientScope
 from smscx_client.model.model404_not_found import Model404NotFound
+from smscx_client.model.model405_method_not_allowed import Model405MethodNotAllowed
+from smscx_client.model.model429_too_many_requests import Model429TooManyRequests
 from smscx_client.model.model500_server_error import Model500ServerError
 from smscx_client.model.number_lookup_response import NumberLookupResponse
 from smscx_client.model.number_validate_response import NumberValidateResponse
@@ -27,6 +32,7 @@ from smscx_client.model.numbers_lookup_request import NumbersLookupRequest
 from smscx_client.model.numbers_lookup_response import NumbersLookupResponse
 from smscx_client.model.numbers_validate_request import NumbersValidateRequest
 from smscx_client.model.numbers_validate_response import NumbersValidateResponse
+from smscx_client.model.renew_number_response import RenewNumberResponse
 from smscx_client.model.renew_rent_request import RenewRentRequest
 from smscx_client.model.rent_number_request import RentNumberRequest
 from smscx_client.model.rent_number_response import RentNumberResponse
@@ -99,51 +105,59 @@ class NumbersApi(object):
             },
             api_client=api_client
         )
-        self.get_available_numbers_endpoint = _Endpoint(
+        self.edit_rent_settings_endpoint = _Endpoint(
             settings={
-                'response_type': (RentNumbersResponse,),
+                'response_type': (EditRentResponse,),
                 'auth': [
                     'ApiKeyAuth',
                     'BearerAuth'
                 ],
-                'endpoint_path': '/numbers/rent/available/{countryIso}',
-                'operation_id': 'get_available_numbers',
-                'http_method': 'GET',
+                'endpoint_path': '/numbers/rent/{rentId}/edit',
+                'operation_id': 'edit_rent_settings',
+                'http_method': 'PATCH',
                 'servers': None,
             },
             params_map={
                 'all': [
-                    'country_iso',
+                    'rent_id',
+                    'edit_rent_request',
                 ],
                 'required': [
-                    'country_iso',
+                    'rent_id',
+                    'edit_rent_request',
                 ],
                 'nullable': [
                 ],
                 'enum': [
                 ],
                 'validation': [
-                    'country_iso',
+                    'rent_id',
                 ]
             },
             root_map={
                 'validations': {
-                    ('country_iso',): {
-                        'max_length': 2,
-                        'min_length': 2,
+                    ('rent_id',): {
+                        'max_length': 36,
+                        'min_length': 36,
+                        'regex': {
+                            'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',  # noqa: E501
+                        },
                     },
                 },
                 'allowed_values': {
                 },
                 'api_types': {
-                    'country_iso':
+                    'rent_id':
                         (str,),
+                    'edit_rent_request':
+                        (EditRentRequest,),
                 },
                 'attribute_map': {
-                    'country_iso': 'countryIso',
+                    'rent_id': 'rentId',
                 },
                 'location_map': {
-                    'country_iso': 'path',
+                    'rent_id': 'path',
+                    'edit_rent_request': 'body',
                 },
                 'collection_format_map': {
                 }
@@ -152,19 +166,21 @@ class NumbersApi(object):
                 'accept': [
                     'application/json'
                 ],
-                'content_type': [],
+                'content_type': [
+                    'application/json'
+                ]
             },
             api_client=api_client
         )
-        self.get_bulk_lookup_status_endpoint = _Endpoint(
+        self.export_number_lookup_report_to_csv_endpoint = _Endpoint(
             settings={
-                'response_type': (NumbersBulkLookupResult,),
+                'response_type': (str,),
                 'auth': [
                     'ApiKeyAuth',
                     'BearerAuth'
                 ],
-                'endpoint_path': '/numbers/lookup/lookupBulkId/{lookupBulkId}',
-                'operation_id': 'get_bulk_lookup_status',
+                'endpoint_path': '/numbers/lookup/lookupBulkId/{lookupBulkId}/csv',
+                'operation_id': 'export_number_lookup_report_to_csv',
                 'http_method': 'GET',
                 'servers': None,
             },
@@ -210,6 +226,324 @@ class NumbersApi(object):
             },
             headers_map={
                 'accept': [
+                    'application/csv',
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.export_number_lookup_report_to_xlsx_endpoint = _Endpoint(
+            settings={
+                'response_type': (file_type,),
+                'auth': [
+                    'ApiKeyAuth',
+                    'BearerAuth'
+                ],
+                'endpoint_path': '/numbers/lookup/lookupBulkId/{lookupBulkId}/xlsx',
+                'operation_id': 'export_number_lookup_report_to_xlsx',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'lookup_bulk_id',
+                ],
+                'required': [
+                    'lookup_bulk_id',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'lookup_bulk_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('lookup_bulk_id',): {
+                        'max_length': 36,
+                        'min_length': 36,
+                        'regex': {
+                            'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'api_types': {
+                    'lookup_bulk_id':
+                        (str,),
+                },
+                'attribute_map': {
+                    'lookup_bulk_id': 'lookupBulkId',
+                },
+                'location_map': {
+                    'lookup_bulk_id': 'path',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.get_available_numbers_endpoint = _Endpoint(
+            settings={
+                'response_type': (RentNumbersResponse,),
+                'auth': [
+                    'ApiKeyAuth',
+                    'BearerAuth'
+                ],
+                'endpoint_path': '/numbers/rent/available/{countryIso}',
+                'operation_id': 'get_available_numbers',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'country_iso',
+                    'features',
+                    'number_type',
+                    'setup_time',
+                    'registration',
+                    'inbound_sms_sender',
+                    'include',
+                    'exclude',
+                ],
+                'required': [
+                    'country_iso',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                    'features',
+                    'number_type',
+                    'setup_time',
+                ],
+                'validation': [
+                    'country_iso',
+                    'include',
+                    'exclude',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('country_iso',): {
+                        'max_length': 2,
+                        'min_length': 2,
+                    },
+                    ('include',): {
+                        'max_length': 1,
+                        'min_length': 17,
+                    },
+                    ('exclude',): {
+                        'max_length': 1,
+                        'min_length': 17,
+                    },
+                },
+                'allowed_values': {
+                    ('features',): {
+
+                        "1": 1,
+                        "2": 2,
+                        "3": 3
+                    },
+                    ('number_type',): {
+
+                        "MOBILE": "mobile",
+                        "LANDLINE": "landline"
+                    },
+                    ('setup_time',): {
+
+                        "INSTANT": "instant",
+                        "DELAYED": "delayed"
+                    },
+                },
+                'api_types': {
+                    'country_iso':
+                        (str,),
+                    'features':
+                        (int,),
+                    'number_type':
+                        (str,),
+                    'setup_time':
+                        (str,),
+                    'registration':
+                        (bool,),
+                    'inbound_sms_sender':
+                        (bool,),
+                    'include':
+                        (str,),
+                    'exclude':
+                        (str,),
+                },
+                'attribute_map': {
+                    'country_iso': 'countryIso',
+                    'features': 'features',
+                    'number_type': 'number_type',
+                    'setup_time': 'setup_time',
+                    'registration': 'registration',
+                    'inbound_sms_sender': 'inbound_sms_sender',
+                    'include': 'include',
+                    'exclude': 'exclude',
+                },
+                'location_map': {
+                    'country_iso': 'path',
+                    'features': 'query',
+                    'number_type': 'query',
+                    'setup_time': 'query',
+                    'registration': 'query',
+                    'inbound_sms_sender': 'query',
+                    'include': 'query',
+                    'exclude': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.get_bulk_lookup_campaigns_endpoint = _Endpoint(
+            settings={
+                'response_type': (BulkLookupCampaignsResponse,),
+                'auth': [
+                    'ApiKeyAuth',
+                    'BearerAuth'
+                ],
+                'endpoint_path': '/numbers/lookup',
+                'operation_id': 'get_bulk_lookup_campaigns',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'limit',
+                    'next',
+                    'previous',
+                ],
+                'required': [],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                ]
+            },
+            root_map={
+                'validations': {
+                },
+                'allowed_values': {
+                },
+                'api_types': {
+                    'limit':
+                        (int,),
+                    'next':
+                        (str,),
+                    'previous':
+                        (str,),
+                },
+                'attribute_map': {
+                    'limit': 'limit',
+                    'next': 'next',
+                    'previous': 'previous',
+                },
+                'location_map': {
+                    'limit': 'query',
+                    'next': 'query',
+                    'previous': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.get_bulk_lookup_status_endpoint = _Endpoint(
+            settings={
+                'response_type': (NumbersBulkLookupResult,),
+                'auth': [
+                    'ApiKeyAuth',
+                    'BearerAuth'
+                ],
+                'endpoint_path': '/numbers/lookup/lookupBulkId/{lookupBulkId}',
+                'operation_id': 'get_bulk_lookup_status',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'lookup_bulk_id',
+                    'limit',
+                    'next',
+                    'previous',
+                ],
+                'required': [
+                    'lookup_bulk_id',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'lookup_bulk_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('lookup_bulk_id',): {
+                        'max_length': 36,
+                        'min_length': 36,
+                        'regex': {
+                            'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'api_types': {
+                    'lookup_bulk_id':
+                        (str,),
+                    'limit':
+                        (int,),
+                    'next':
+                        (str,),
+                    'previous':
+                        (str,),
+                },
+                'attribute_map': {
+                    'lookup_bulk_id': 'lookupBulkId',
+                    'limit': 'limit',
+                    'next': 'next',
+                    'previous': 'previous',
+                },
+                'location_map': {
+                    'lookup_bulk_id': 'path',
+                    'limit': 'query',
+                    'next': 'query',
+                    'previous': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
                     'application/json'
                 ],
                 'content_type': [],
@@ -231,6 +565,9 @@ class NumbersApi(object):
             params_map={
                 'all': [
                     'rent_id',
+                    'limit',
+                    'next',
+                    'previous',
                 ],
                 'required': [
                     'rent_id',
@@ -258,12 +595,24 @@ class NumbersApi(object):
                 'api_types': {
                     'rent_id':
                         (str,),
+                    'limit':
+                        (int,),
+                    'next':
+                        (str,),
+                    'previous':
+                        (str,),
                 },
                 'attribute_map': {
                     'rent_id': 'rentId',
+                    'limit': 'limit',
+                    'next': 'next',
+                    'previous': 'previous',
                 },
                 'location_map': {
                     'rent_id': 'path',
+                    'limit': 'query',
+                    'next': 'query',
+                    'previous': 'query',
                 },
                 'collection_format_map': {
                 }
@@ -350,25 +699,83 @@ class NumbersApi(object):
             },
             params_map={
                 'all': [
+                    'features',
+                    'country_iso',
+                    'number_type',
+                    'active_rent',
+                    'inbound_sms_sender',
+                    'include',
+                    'exclude',
                 ],
                 'required': [],
                 'nullable': [
                 ],
                 'enum': [
+                    'features',
+                    'number_type',
                 ],
                 'validation': [
+                    'include',
+                    'exclude',
                 ]
             },
             root_map={
                 'validations': {
+                    ('include',): {
+                        'max_length': 1,
+                        'min_length': 17,
+                    },
+                    ('exclude',): {
+                        'max_length': 1,
+                        'min_length': 17,
+                    },
                 },
                 'allowed_values': {
+                    ('features',): {
+
+                        "1": 1,
+                        "2": 2,
+                        "3": 3
+                    },
+                    ('number_type',): {
+
+                        "MOBILE": "mobile",
+                        "LANDLINE": "landline"
+                    },
                 },
                 'api_types': {
+                    'features':
+                        (int,),
+                    'country_iso':
+                        (str,),
+                    'number_type':
+                        (str,),
+                    'active_rent':
+                        (bool,),
+                    'inbound_sms_sender':
+                        (bool,),
+                    'include':
+                        (str,),
+                    'exclude':
+                        (str,),
                 },
                 'attribute_map': {
+                    'features': 'features',
+                    'country_iso': 'country_iso',
+                    'number_type': 'number_type',
+                    'active_rent': 'active_rent',
+                    'inbound_sms_sender': 'inbound_sms_sender',
+                    'include': 'include',
+                    'exclude': 'exclude',
                 },
                 'location_map': {
+                    'features': 'query',
+                    'country_iso': 'query',
+                    'number_type': 'query',
+                    'active_rent': 'query',
+                    'inbound_sms_sender': 'query',
+                    'include': 'query',
+                    'exclude': 'query',
                 },
                 'collection_format_map': {
                 }
@@ -548,7 +955,7 @@ class NumbersApi(object):
         )
         self.renew_rent_endpoint = _Endpoint(
             settings={
-                'response_type': (RentNumberResponse,),
+                'response_type': (RenewNumberResponse,),
                 'auth': [
                     'ApiKeyAuth',
                     'BearerAuth'
@@ -780,12 +1187,13 @@ class NumbersApi(object):
         """Cancel rent for phone number  # noqa: E501
 
         Cancel rent for a phone number. Phone numbers rentals can be canceled within the first 30 minutes of renting period. Your account will be credited for the phone number rental cost.      
-### Errors for DELETE `/numbers/rent/{rentId}`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-|  400 | 1221  |  invalid_param  |  Invalid parameter `rentId` |  
-|  403 | 1227  |  access_denied  |  Cannot cancel this rent. More than 30 minutes passed from start of renting period |  
-|  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
+        ### Errors for DELETE `/numbers/rent/{rentId}`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        |  400 | 1221  |  invalid_param  |  The rentId provided is invalid |  
+        |  403 | 1227  |  access_denied  |  Cannot cancel this rent. More than 30 minutes passed from start of renting period |  
+        |  403 | 1232  |  access_denied  |  Cannot cancel this rent. The number has already been used for inbound SMS |  
+        |  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -861,6 +1269,259 @@ class NumbersApi(object):
             rent_id
         return self.cancel_rent_endpoint.call_with_http_info(**kwargs)
 
+    def edit_rent_settings(
+        self,
+        rent_id,
+        edit_rent_request,
+        **kwargs
+    ):
+        """Edit settings for active rent  # noqa: E501
+
+        Edit settings of active rent    ### Errors for GET `/numbers/rent/{rentId}/edit`  | HTTP code  | Error code  | Type  | Description  |  |:------------:|:------------:|:------------:| ------------ |  |  400 | 1221  |  invalid_param  |  The rentId provided is invalid |  |  400 | 1225  |  invalid_param  |  Parameter `autorenew` must be type boolean |  |  400 | 1226  |  invalid_param  |  The parameter `callbackUrl` is not a valid url |  |  400 | 1233  |  invalid_param  |  At least one parameter required (autoRenew, callbackUrl) |  |  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.edit_rent_settings(rent_id, edit_rent_request, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            rent_id (str): Identifier of the rental operation
+            edit_rent_request (EditRentRequest): 
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _spec_property_naming (bool): True if the variable names in the input data
+                are serialized names.
+                False if the variable names in the input data
+                are pythonic names, e.g. snake case (default)
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            EditRentResponse
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_spec_property_naming'] = kwargs.get(
+            '_spec_property_naming', False
+        )
+        kwargs['_content_type'] = kwargs.get(
+            '_content_type')
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['_request_auths'] = kwargs.get('_request_auths', None)
+        kwargs['rent_id'] = \
+            rent_id
+        kwargs['edit_rent_request'] = \
+            edit_rent_request
+        return self.edit_rent_settings_endpoint.call_with_http_info(**kwargs)
+
+    def export_number_lookup_report_to_csv(
+        self,
+        lookup_bulk_id,
+        **kwargs
+    ):
+        """Export number lookup campaign to CSV  # noqa: E501
+
+        Exports the details of a phone number lookup campaign to a CSV file.    ### Errors for GET `/numbers/lookup/lookupBulkId/{lookupBulkId}/csv`  | HTTP code  | Error code  | Type  | Description  |  |:------------:|:------------:|:------------:| ------------ |  |  400 | 1218  |  invalid_param  |  The lookupBulkId provided is invalid  |  |  404 | 1220  |  not_found  |  Lookup Bulk ID not found  |  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.export_number_lookup_report_to_csv(lookup_bulk_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            lookup_bulk_id (str): Identifier of the bulk number lookup campaign
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _spec_property_naming (bool): True if the variable names in the input data
+                are serialized names.
+                False if the variable names in the input data
+                are pythonic names, e.g. snake case (default)
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            str
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_spec_property_naming'] = kwargs.get(
+            '_spec_property_naming', False
+        )
+        kwargs['_content_type'] = kwargs.get(
+            '_content_type')
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['_request_auths'] = kwargs.get('_request_auths', None)
+        kwargs['lookup_bulk_id'] = \
+            lookup_bulk_id
+        return self.export_number_lookup_report_to_csv_endpoint.call_with_http_info(**kwargs)
+
+    def export_number_lookup_report_to_xlsx(
+        self,
+        lookup_bulk_id,
+        **kwargs
+    ):
+        """Export number lookup campaign to XLSX  # noqa: E501
+
+        Exports the details of a phone number lookup campaign to a XLSX file.    ### Errors for GET `/numbers/lookup/lookupBulkId/{lookupBulkId}/xlsx`  | HTTP code  | Error code  | Type  | Description  |  |:------------:|:------------:|:------------:| ------------ |  |  400 | 1218  |  invalid_param  |  The lookupBulkId provided is invalid  |  |  404 | 1220  |  not_found  |  Lookup Bulk ID not found  |  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.export_number_lookup_report_to_xlsx(lookup_bulk_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            lookup_bulk_id (str): Identifier of the bulk number lookup campaign
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _spec_property_naming (bool): True if the variable names in the input data
+                are serialized names.
+                False if the variable names in the input data
+                are pythonic names, e.g. snake case (default)
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            file_type
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_spec_property_naming'] = kwargs.get(
+            '_spec_property_naming', False
+        )
+        kwargs['_content_type'] = kwargs.get(
+            '_content_type')
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['_request_auths'] = kwargs.get('_request_auths', None)
+        kwargs['lookup_bulk_id'] = \
+            lookup_bulk_id
+        return self.export_number_lookup_report_to_xlsx_endpoint.call_with_http_info(**kwargs)
+
     def get_available_numbers(
         self,
         country_iso,
@@ -869,10 +1530,10 @@ class NumbersApi(object):
         """Get available numbers for rent  # noqa: E501
 
         Get the list of available phone numbers for rent       
-### Errors for GET `/numbers/rent/available/{countryIso}`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-|  400 | 2003  |  invalid_param  |  Country ISO provided is invalid |    # noqa: E501
+        ### Errors for GET `/numbers/rent/available/{countryIso}`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        |  400 | 2003  |  invalid_param  |  Country ISO provided is invalid |    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -883,6 +1544,13 @@ class NumbersApi(object):
             country_iso (str):
 
         Keyword Args:
+            features (int): Filter by number features (1 - receive SMS, 2 - send SMS, 1 + 2 = 3 - send and receive SMS). [optional]
+            number_type (str): Filter by type of phone number. [optional]
+            setup_time (str): Filter by time of setup. [optional]
+            registration (bool): Filter by registration. [optional]
+            inbound_sms_sender (bool): Filter numbers that support inbound SMS from alphanumeric sender ID. [optional]
+            include (str): Filter phone numbers that include the following digits. [optional]
+            exclude (str): Filter phone numbers that exclude the following digits. [optional]
             _return_http_data_only (bool): response data without head status
                 code and headers. Default is True.
             _preload_content (bool): if False, the urllib3.HTTPResponse object
@@ -948,6 +1616,87 @@ class NumbersApi(object):
             country_iso
         return self.get_available_numbers_endpoint.call_with_http_info(**kwargs)
 
+    def get_bulk_lookup_campaigns(
+        self,
+        **kwargs
+    ):
+        """Get list of bulk lookup campaigns  # noqa: E501
+
+        Get list of bulk lookup campaigns  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.get_bulk_lookup_campaigns(async_req=True)
+        >>> result = thread.get()
+
+
+        Keyword Args:
+            limit (int): A limit on the number of objects to be returned. [optional] if omitted the server will use the default value of 500
+            next (str): The next token used to retrieve additional data. [optional]
+            previous (str): The previous token used to retrieve additional data. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _spec_property_naming (bool): True if the variable names in the input data
+                are serialized names.
+                False if the variable names in the input data
+                are pythonic names, e.g. snake case (default)
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            BulkLookupCampaignsResponse
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_spec_property_naming'] = kwargs.get(
+            '_spec_property_naming', False
+        )
+        kwargs['_content_type'] = kwargs.get(
+            '_content_type')
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['_request_auths'] = kwargs.get('_request_auths', None)
+        return self.get_bulk_lookup_campaigns_endpoint.call_with_http_info(**kwargs)
+
     def get_bulk_lookup_status(
         self,
         lookup_bulk_id,
@@ -956,11 +1705,11 @@ class NumbersApi(object):
         """Get Bulk Lookup result  # noqa: E501
 
         Get details of a bulk phone number lookup.        
-### Errors for GET `/numbers/lookup/lookupBulkId/{lookupBulkId}`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-| 400 | 1218 | not_found | The lookupBulkId provided is invalid |  
-| 404 | 1220 | invalid_param | Lookup Bulk ID not found |  # noqa: E501
+        ### Errors for GET `/numbers/lookup/lookupBulkId/{lookupBulkId}`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        | 400 | 1218 | invalid_param | The lookupBulkId provided is invalid |  
+        | 404 | 1220 | not_found | Lookup Bulk ID not found |  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -971,6 +1720,9 @@ class NumbersApi(object):
             lookup_bulk_id (str): Identifier of the bulk number lookup campaign
 
         Keyword Args:
+            limit (int): A limit on the number of objects to be returned. [optional] if omitted the server will use the default value of 500
+            next (str): The next token used to retrieve additional data. [optional]
+            previous (str): The previous token used to retrieve additional data. [optional]
             _return_http_data_only (bool): response data without head status
                 code and headers. Default is True.
             _preload_content (bool): if False, the urllib3.HTTPResponse object
@@ -1044,11 +1796,11 @@ class NumbersApi(object):
         """Get inbound SMS from rented number  # noqa: E501
 
         Get a list of SMS received on the rented phone number.      
-### Errors for GET `/numbers/rent/{rentId}/inbound`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-|  400 | 1221  |  invalid_param  |  Invalid parameter `rentId` |  
-|  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
+        ### Errors for GET `/numbers/rent/{rentId}/inbound`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        |  400 | 1221  |  invalid_param  |  The rentId provided is invalid |  
+        |  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -1059,6 +1811,9 @@ class NumbersApi(object):
             rent_id (str): Identifier of the rental operation
 
         Keyword Args:
+            limit (int): A limit on the number of objects to be returned. [optional] if omitted the server will use the default value of 500
+            next (str): The next token used to retrieve additional data. [optional]
+            previous (str): The previous token used to retrieve additional data. [optional]
             _return_http_data_only (bool): response data without head status
                 code and headers. Default is True.
             _preload_content (bool): if False, the urllib3.HTTPResponse object
@@ -1132,11 +1887,11 @@ class NumbersApi(object):
         """Get status of rent  # noqa: E501
 
         Get details of an existing rental.      
-### Errors for GET `/numbers/rent/{rentId}`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-|  400 | 1221  |  invalid_param  |  Invalid parameter `rentId` |  
-|  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
+        ### Errors for GET `/numbers/rent/{rentId}`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        |  400 | 1221  |  invalid_param  |  The rentId provided is invalid |  
+        |  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -1227,6 +1982,13 @@ class NumbersApi(object):
 
 
         Keyword Args:
+            features (int): Filter by number features (1 - receive SMS, 2 - send SMS, 1 + 2 = 3 - send and receive SMS). [optional]
+            country_iso (str): Filter by country iso. Two-letter country code defined in ISO-3166 alpha 2 standard (case insensitive). [optional]
+            number_type (str): Filter by type of phone number. [optional]
+            active_rent (bool): Filter by active rent. [optional]
+            inbound_sms_sender (bool): Filter numbers that support inbound SMS from alphanumeric sender ID. [optional]
+            include (str): Filter phone numbers that include the following digits. [optional]
+            exclude (str): Filter phone numbers that exclude the following digits. [optional]
             _return_http_data_only (bool): response data without head status
                 code and headers. Default is True.
             _preload_content (bool): if False, the urllib3.HTTPResponse object
@@ -1298,11 +2060,11 @@ class NumbersApi(object):
         """Get Single Lookup result  # noqa: E501
 
         Get details of a single number lookup.      
-### Errors for GET `/numbers/lookup/lookupId/{lookupId}`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-| 400 | 1217 | invalid_param | The lookupId provided is invalid |  
-| 404 | 1219 | not_found | Lookup  ID not found |  # noqa: E501
+        ### Errors for GET `/numbers/lookup/lookupId/{lookupId}`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        | 400 | 1217 | invalid_param | The lookupId provided is invalid |  
+        | 404 | 1219 | not_found | Lookup  ID not found |  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -1385,16 +2147,23 @@ class NumbersApi(object):
     ):
         """Lookup number  # noqa: E501
 
-        Lookup a single phone number, provided in international E.164 format. Returns info about status of the number (ACTIVE, ABSENT), if the phone number is ported, roaming, original and current network operator.    The endpoint returns error if phone number is invalid.    ### Statuses of phone number lookup  | Status | Description |  
-|:------------:|:------------|  | ACTIVE | Phone number is reachable |  | ABSENT | Phone number is not reachable |  | BARRED | Phone number has a block from their operator |  | UNKNOWN | Unknown subscriber. Phone number is not reachable |  | FAILED | Lookup for this phone number failed |    
-### Errors for GET `/numbers/lookup/{phoneNumber}`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-| 400 | 1207 | invalid_param | The phone number is invalid |  
-| 403 | 1214 | no_coverage | No coverage or restricted destination |  
-| 400 | 1113 | insufficient_credit | Insufficient credit |  
-| 400 | 1114 | insufficient_credit | Credit limit reached. To increase the credit limit, please contact your account manager |  
-| 400 | 1212 | invalid_param | Invalid request parameters |  # noqa: E501
+        Lookup a single phone number, provided in international E.164 format. Returns info about status of the number (ACTIVE, ABSENT), if the phone number is ported, roaming, original and current network operator.    The endpoint returns error if phone number is invalid.    
+        ### Statuses of phone number lookup  
+        | Status | Description |  
+        |:------------:|:------------|  
+        | ACTIVE | Phone number is reachable |  
+        | ABSENT | Phone number is not reachable |  
+        | BARRED | Phone number has a block from their operator |  
+        | UNKNOWN | Unknown subscriber. Phone number is not reachable |  
+        | FAILED | Lookup for this phone number failed |    
+        ### Errors for GET `/numbers/lookup/{phoneNumber}`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        | 400 | 1207 | invalid_param | The phone number is invalid |  
+        | 403 | 1214 | no_coverage | No coverage or restricted destination |  
+        | 400 | 1113 | insufficient_credit | Insufficient credit |  
+        | 400 | 1114 | insufficient_credit | Credit limit reached. To increase the credit limit, please contact your account manager |  
+        | 400 | 1212 | invalid_param | Invalid request parameters |  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -1477,19 +2246,26 @@ class NumbersApi(object):
     ):
         """Lookup numbers in bulk  # noqa: E501
 
-        Lookup a list of phone numbers. The result of the bulk phone lookup: status of the number (ACTIVE, ABSENT), if the phone numbers are ported, roaming, original and current network operator. You can lookup in bulk up to **40.000 phone numbers**.    The endpoint does not return error if phone numbers are invalid.    <a name=\"lookup-statuses\"></a>  ### Statuses of phone number lookup  | Status | Description |  
-|:------------:|:------------|  | ACTIVE | Phone number is reachable |  | ABSENT | Phone number is not reachable |  | BARRED | Phone number has a block from their operator |  | UNKNOWN | Unknown subscriber. Phone number is not reachable |  | FAILED | Lookup for this phone number failed |    
-### Errors for POST `/numbers/lookup`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-| 400 | 1203 | invalid_param | The parameter 'phoneNumbers' is empty or not set |  
-| 400 | 1208 | invalid_param | The parameter 'phoneNumbers' must be an array of phone numbers |  
-| 400 | 1205 | invalid_param | The phone numbers array is too big (max. allowed: 40000 numbers) |  
-| 400 | 1209 | invalid_param | The parameter 'lookupCallbackUrl' is not a valid URL |  
-| 403 | 1214 | no_coverage | No coverage or restricted destination |  
-| 400 | 1216 | invalid_param | No valid numbers provided or no coverage |  
-| 400 | 1113 | insufficient_credit | Insufficient credit |  
-| 400 | 1114 | insufficient_credit | Credit limit reached. To increase the credit limit, please contact your account manager |  # noqa: E501
+        Lookup a list of phone numbers. The result of the bulk phone lookup: status of the number (ACTIVE, ABSENT), if the phone numbers are ported, roaming, original and current network operator. You can lookup in bulk up to **40.000 phone numbers**.    The endpoint does not return error if phone numbers are invalid.    
+        ### Statuses of phone number lookup  
+        | Status | Description |
+        |:------------:|:------------|  
+        | ACTIVE | Phone number is reachable |  
+        | ABSENT | Phone number is not reachable |  
+        | BARRED | Phone number has a block from their operator |  
+        | UNKNOWN | Unknown subscriber. Phone number is not reachable |  
+        | FAILED | Lookup for this phone number failed |
+        ### Errors for POST `/numbers/lookup`  
+        | HTTP code  | Error code  | Type  | Description  |
+        |:------------:|:------------:|:------------:| ------------ |
+        | 400 | 1203 | invalid_param | The parameter 'phoneNumbers' is empty or not set |
+        | 400 | 1208 | invalid_param | The parameter 'phoneNumbers' must be an array of phone numbers |
+        | 400 | 1205 | invalid_param | The phone numbers array is too big (max. allowed: 40000 numbers) |
+        | 400 | 1209 | invalid_param | The parameter 'lookupCallbackUrl' is not a valid URL |
+        | 403 | 1214 | no_coverage | No coverage or restricted destination |
+        | 400 | 1216 | invalid_param | No valid numbers provided or no coverage |
+        | 400 | 1113 | insufficient_credit | Insufficient credit |
+        | 400 | 1114 | insufficient_credit | Credit limit reached. To increase the credit limit, please contact your account manager |  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -1574,20 +2350,17 @@ class NumbersApi(object):
         """Renew rent for phone number  # noqa: E501
 
         Renew the rental of a phone number.      
-### Errors for PATCH `/numbers/rent/{rentId}`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-|  400 | 1221  |  invalid_param  |  Invalid parameter `rentId` |  
-
-|  400 | 1224  |  invalid_param  |  Rent period is invalid (1, 7 or 30 days) |  
-
-|  400 | 1225  |  invalid_param  |  Parameter `autorenew` must be of type boolean |  
-
-|  400 | 1226  |  invalid_param  |  The parameter `callbackUrl` is not a valid url |  
-
-|  400 | 1229  |  invalid_param  |  Rent period is not between min and max period allowed for this number |  
-|  403 | 1228  |  access_denied  |  The rent cannot be renewed (rent already expired or phone number will not be available in the future) |  
-|  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
+        ### Errors for PATCH `/numbers/rent/{rentId}`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        |  400 | 1221  |  invalid_param  |  The rentId provided is invalid |  
+        |  400 | 1224  |  invalid_param  |  Rent period is invalid (1, 7 or 30 days) |  
+        |  400 | 1225  |  invalid_param  |  Parameter `autorenew` must be type boolean |  
+        |  400 | 1226  |  invalid_param  |  The parameter `callbackUrl` is not a valid url |  
+        |  400 | 1229  |  invalid_param  |  Rent period is lower than the minimum rent period of this number |  
+        |  400 | 1113  |  insufficient_credit  |  Insufficient credit |  
+        |  403 | 1228  |  access_denied  |  The rent cannot be renewed (rent already expired or phone number is not available for future rent) |  
+        |  404 | 1223  |  not_found  |  Rent ID not found |    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -1631,7 +2404,7 @@ class NumbersApi(object):
             async_req (bool): execute request asynchronously
 
         Returns:
-            RentNumberResponse
+            RenewNumberResponse
                 If the method is called asynchronously, returns the request
                 thread.
         """
@@ -1674,22 +2447,18 @@ class NumbersApi(object):
         """Rent phone number  # noqa: E501
 
         Rent a phone number for a period of time (1, 7 or 30 days).       
-### Errors for POST `/numbers/rent`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-|  400 | 1222  |  invalid_param  |  Invalid parameter `numberId` |  
-
-|  400 | 1224  |  invalid_param  |  Rent period is invalid (1, 7 or 30 days) |  
-
-|  400 | 1225  |  invalid_param  |  Parameter `autorenew` must be of type boolean |  
-
-|  400 | 1226  |  invalid_param  |  The parameter `callbackUrl` is not a valid url |  
-
-|  400 | 1229  |  invalid_param  |  Rent period is not between min and max period allowed for this number |  
-
-|  400 | 1113  |  insufficient_credit  |  Insufficient credit |  
-|  403 | 1231  |  access_denied  |  Cannot rent this phone number (already rented by someone else) |  
-|  404 | 1230  |  not_found  |  Number ID not found or number is not available for rent anymore|    # noqa: E501
+        ### Errors for POST `/numbers/rent`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        |  400 | 1222  |  invalid_param  |  Invalid parameter `numberId` |  
+        |  400 | 1224  |  invalid_param  |  Rent period is invalid (1, 7 or 30 days) |  
+        |  400 | 1225  |  invalid_param  |  Parameter `autorenew` must be type boolean |  
+        |  400 | 1226  |  invalid_param  |  The parameter `callbackUrl` is not a valid url |  
+        |  400 | 1229  |  invalid_param  |  Rent period is lower than the minimum rent period of this number |  
+        |  400 | 1113  |  insufficient_credit  |  Insufficient credit |  
+        |  400 | 1234  |  invalid_param  |  Registration ID provided is invalid or not found |  
+        |  403 | 1231  |  access_denied  |  Cannot rent this phone number (already rented) |  
+        |  404 | 1230  |  not_found  |  Number ID not found or number is not available for rent anymore|    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -1773,10 +2542,10 @@ class NumbersApi(object):
         """Validate number  # noqa: E501
 
         Validates a single phone number, provided in international E.164 format.    The endpoint returns error if phone number is invalid.    
-### Errors for GET `/numbers/validate/{phoneNumber}`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-|  400 | 1207  |  invalid_param  |  The phone number is invalid  |  # noqa: E501
+        ### Errors for GET `/numbers/validate/{phoneNumber}`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        |  400 | 1207  |  invalid_param  |  The phone number is invalid  |  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
@@ -1860,13 +2629,12 @@ class NumbersApi(object):
         """Validate numbers in bulk  # noqa: E501
 
         Validate a list of phone numbers. You can validate in bulk up to **40.000 phone numbers**.    The endpoint does not return error if phone numbers are invalid.    This method will validate the list of phone numbers and return an array of objects, **preserving the order of the list provided** and not excluding the invalid phone numbers.     An invalid phone number will have the parameter `invalid` with value `true` in the response object.      
-### Errors for POST `/numbers/validate`  
-| HTTP code  | Error code  | Type  | Description  |  
-|:------------:|:------------:|:------------:| ------------ |  
-|  400 | 1203  |  invalid_param  |  The parameter `phoneNumbers` is empty or not set |  
-
-|  400 | 1208  |  invalid_param  |  The parameter `phoneNumbers` must be an array of phone numbers |  
-| 400 | 1205 | invalid_param | The phone numbers array is too big (max. allowed: 40000 numbers) |    # noqa: E501
+        ### Errors for POST `/numbers/validate`  
+        | HTTP code  | Error code  | Type  | Description  |  
+        |:------------:|:------------:|:------------:| ------------ |  
+        |  400 | 1203  |  invalid_param  |  The parameter `phoneNumbers` is empty or not set |  
+        |  400 | 1208  |  invalid_param  |  The parameter `phoneNumbers` must be an array of phone numbers |  
+        | 400  | 1205  |  invalid_param  | The phone numbers array is too big (max. allowed: 40000 numbers) |    # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 

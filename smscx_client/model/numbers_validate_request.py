@@ -33,9 +33,7 @@ class NumbersValidateRequest(ModelNormal):
         },
     }
 
-    @cached_property
-    def additional_properties_type():
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 

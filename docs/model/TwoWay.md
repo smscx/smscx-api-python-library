@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **type** | **str** | The type of number to send and receive SMS: VLN (Virtual Local Number), Short code, 10DLC (10 Digits Long Code) | 
 **country_iso** | **str** | Two-letter country code (ISO-3166 alpha 2) of the destination where two-way messaging will be used | 
 **expire_date** | **datetime** | The date in UTC when the two-way messaging number subscription will expire | 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

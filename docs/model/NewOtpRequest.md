@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **pin_type** | **str** | Type of pin that will be generated for each mobile phone and will replace the placeholder {{pin}  Note: If this parameter is set, it will overwrite the setting from [Admin Dashboard &gt; HTTP API &gt; Oauth2 &gt; Application settings](#) | [optional] 
 **pin_length** | **int** | Character length of the pin   Note: If this parameter is set, it will overwrite the setting from [Admin Dashboard &gt; HTTP API &gt; Oauth2 &gt; Application settings](#) | [optional] 
 **otp_callback_url** | **str** | A valid URL to receive status updates for the OTP verification.   Note: If this parameter is set, it will overwrite the setting from [Admin Dashboard &gt; HTTP API &gt; Oauth2 &gt; Application settings](#) | [optional] 
-**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
+
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#available-methods) [[Back to README]](../../README.md)
 

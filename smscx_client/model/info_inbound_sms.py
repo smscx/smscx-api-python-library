@@ -27,15 +27,20 @@ class InfoInboundSms(ModelNormal):
     }
 
     validations = {
+        ('rent_id',): {
+            'max_length': 36,
+            'min_length': 36,
+            'regex': {
+                'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',  # noqa: E501
+            },
+        },
         ('country_iso',): {
             'max_length': 2,
             'min_length': 2,
         },
     }
 
-    @cached_property
-    def additional_properties_type():
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 
@@ -47,6 +52,7 @@ class InfoInboundSms(ModelNormal):
                 and the value is attribute type.
         """
         return {
+            'rent_id': (str,),  # noqa: E501
             'phone_number': (str,),  # noqa: E501
             'country_iso': (str,),  # noqa: E501
         }
@@ -57,6 +63,7 @@ class InfoInboundSms(ModelNormal):
 
 
     attribute_map = {
+        'rent_id': 'rentId',  # noqa: E501
         'phone_number': 'phoneNumber',  # noqa: E501
         'country_iso': 'countryIso',  # noqa: E501
     }
@@ -68,10 +75,11 @@ class InfoInboundSms(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_api_data(cls, phone_number, country_iso, *args, **kwargs):  # noqa: E501
+    def _from_api_data(cls, rent_id, phone_number, country_iso, *args, **kwargs):  # noqa: E501
         """InfoInboundSms - a model
 
         Args:
+            rent_id (str): Unique identifier of the rent operation
             phone_number (str): Phone number in international E.164 format 
             country_iso (str): Two-letter country ISO of the phone number
 
@@ -107,6 +115,7 @@ class InfoInboundSms(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.rent_id = rent_id
         self.phone_number = phone_number
         self.country_iso = country_iso
         for var_name, var_value in kwargs.items():
@@ -129,10 +138,11 @@ class InfoInboundSms(ModelNormal):
     ])
 
     @convert_js_args_to_python_args
-    def __init__(self, phone_number, country_iso, *args, **kwargs):  # noqa: E501
+    def __init__(self, rent_id, phone_number, country_iso, *args, **kwargs):  # noqa: E501
         """InfoInboundSms - a model
 
         Args:
+            rent_id (str): Unique identifier of the rent operation
             phone_number (str): Phone number in international E.164 format 
             country_iso (str): Two-letter country ISO of the phone number
 
@@ -166,6 +176,7 @@ class InfoInboundSms(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.rent_id = rent_id
         self.phone_number = phone_number
         self.country_iso = country_iso
         for var_name, var_value in kwargs.items():

@@ -39,11 +39,16 @@ class RentNumberRequest(ModelNormal):
                 'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',  # noqa: E501
             },
         },
+        ('registration_id',): {
+            'max_length': 36,
+            'min_length': 36,
+            'regex': {
+                'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',  # noqa: E501
+            },
+        },
     }
 
-    @cached_property
-    def additional_properties_type():
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+    additional_properties_type = None
 
     _nullable = False
 
@@ -59,6 +64,7 @@ class RentNumberRequest(ModelNormal):
             'rent_period': (int,),  # noqa: E501
             'auto_renew': (bool,),  # noqa: E501
             'callback_url': (str, none_type,),  # noqa: E501
+            'registration_id': (str,),  # noqa: E501
         }
 
     @cached_property
@@ -71,6 +77,7 @@ class RentNumberRequest(ModelNormal):
         'rent_period': 'rentPeriod',  # noqa: E501
         'auto_renew': 'autoRenew',  # noqa: E501
         'callback_url': 'callbackUrl',  # noqa: E501
+        'registration_id': 'registrationId',  # noqa: E501
     }
 
     read_only_vars = {
@@ -90,6 +97,7 @@ class RentNumberRequest(ModelNormal):
 
             auto_renew (bool): Auto renew the rental of the phone number at the end of the rental period. [optional] if omitted the server will use the default value of False  # noqa: E501
             callback_url (str, none_type): Callback URL (or webhook) to get the received SMS on the rented phone number. [optional]  # noqa: E501
+            registration_id (str): Applicable if the phone number requires registration. Unique identifier of the registration details for this phone number. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)
@@ -153,6 +161,7 @@ class RentNumberRequest(ModelNormal):
 
             auto_renew (bool): Auto renew the rental of the phone number at the end of the rental period. [optional] if omitted the server will use the default value of False  # noqa: E501
             callback_url (str, none_type): Callback URL (or webhook) to get the received SMS on the rented phone number. [optional]  # noqa: E501
+            registration_id (str): Applicable if the phone number requires registration. Unique identifier of the registration details for this phone number. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)
